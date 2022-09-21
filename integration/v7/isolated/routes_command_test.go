@@ -2,7 +2,6 @@ package isolated
 
 import (
 	"fmt"
-	"sort"
 
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	. "code.cloudfoundry.org/cli/cf/util/testhelpers/matchers"
@@ -183,13 +182,11 @@ var _ = Describe("routes command", func() {
 			})
 
 			It("lists all the routes", func() {
-				names := []string{appName1, appName2}
-				sort.Strings(names)
 				session := helpers.CF("routes")
 				Eventually(session).Should(Exit(0))
 				Expect(session).To(Say(`Getting routes for org %s / space %s as %s\.\.\.`, orgName, spaceName, userName))
 				Expect(session).To(Say(tableHeaders))
-				Expect(session).To(Say(`%s\s+route1\s+%s\s+http\s+http1, http2\s+%s\s+\n`, spaceName, domainName, fmt.Sprintf("%s, %s", names[0], names[1])))
+				Expect(session).To(Say(`%s\s+route1\s+%s\s+http\s+http1, http2\s+%s\s+\n`, spaceName, domainName, fmt.Sprintf("%s, %s", appName1, appName2)))
 				Expect(session).To(Say(`%s\s+route2\s+%s\s+http\s+http1\s+%s\s+\n`, spaceName, domainName, appName2))
 			})
 		})
